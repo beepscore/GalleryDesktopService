@@ -1,7 +1,7 @@
 //
 // IPHONE AND COCOA DEVELOPMENT AUSP10
 //	
-//  DesktopServiceAppDelegate.h
+//  GalleryDesktopServiceAppDelegate.h
 //	HW7
 //
 //  portions Copyright 2010 Chris Parrish
