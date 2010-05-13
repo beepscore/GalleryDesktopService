@@ -277,6 +277,9 @@ static ApplicationController*		sharedApplicationController = nil;
 {
 	// HW_TODO :
     // RETURN THE # OF IMAGES IN THE MODEL
+    // [[view visibleItemIndexes] count] only counts visible items?
+    NSLog(@"numberOfItemsInImageBrowser = %d", [images_ count]);
+    return [images_ count];
 }
 
 - (id) imageBrowser:(IKImageBrowserView *) aBrowser itemAtIndex:(NSUInteger)index;
@@ -284,6 +287,7 @@ static ApplicationController*		sharedApplicationController = nil;
 {
 	// HW_TODO :
     // RETURN THE IMAGE MODEL OBJECT AT THE GIVEN INDEX
+    return [images_ objectAtIndex:index];
 }
 
 - (void) imageBrowser:(IKImageBrowserView *)view removeItemsAtIndexes:(NSIndexSet *)indexes
