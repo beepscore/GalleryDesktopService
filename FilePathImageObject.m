@@ -4,7 +4,8 @@
 //  FilePathImageObject.m
 //	HW7
 //
-//  Copyright 2010 Chris Parrish
+//  portions Copyright 2010 Chris Parrish
+//  portions Copyright Beepscore LLC 2010. All rights reserved.
 //
 // A simple data object that holds an image path
 // used by Image Kit Browser data source

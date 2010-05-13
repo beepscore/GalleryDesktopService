@@ -4,7 +4,8 @@
 //  ApplicationController.m
 //	HW7
 //
-//  Copyright 2010 Chris Parrish
+//  portions Copyright 2010 Chris Parrish
+//  portions Copyright Beepscore LLC 2010. All rights reserved.
 //
 
 #import "ApplicationController.h"
