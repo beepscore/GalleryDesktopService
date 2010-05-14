@@ -34,7 +34,6 @@ static ApplicationController*		sharedApplicationController = nil;
 @synthesize zoomSlider = zoomSlider_;
 
 #pragma mark Singleton
-
 // Note : This is how Apple recommends implementing a singleton class :
 
 + (ApplicationController*)sharedApplicationController
@@ -265,18 +264,14 @@ static ApplicationController*		sharedApplicationController = nil;
 
 - (IBAction) zoomChanged:(id)sender
 {
-	// HW_TODO :
-	// UPDATE THE ZOOM ON THE BROWSER VIEW
-	
+    [self.imageBrowser setZoomValue:[sender floatValue]];
 }
 
 
 #pragma mark -
 #pragma mark IKImageBrowserDataSource
-
-/* implement image-browser's datasource protocol 
- Our datasource representation is a simple mutable array
- */
+// Implement IKImageBrowserView's informal protocol IKImageBrowserDataSource
+// Our datasource representation is a simple mutable array
 
 - (NSUInteger) numberOfItemsInImageBrowser:(IKImageBrowserView *) view
 {
@@ -338,6 +333,7 @@ static ApplicationController*		sharedApplicationController = nil;
 
 #pragma mark -
 #pragma mark IKImageBrowserDelegate
+// Implement IKImageBrowserView's informal protocol IKImageBrowserDelegate
 
 - (void) imageBrowser:(IKImageBrowserView *) aBrowser cellWasDoubleClickedAtIndex:(NSUInteger) index
 {

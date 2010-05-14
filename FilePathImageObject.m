@@ -7,9 +7,6 @@
 //  portions Copyright 2010 Chris Parrish
 //  portions Copyright Beepscore LLC 2010. All rights reserved.
 //
-// A simple data object that holds an image path
-// used by Image Kit Browser data source
-
 
 #import "FilePathImageObject.h"
 #import <Quartz/Quartz.h>
@@ -30,11 +27,7 @@
 
 #pragma mark -
 #pragma mark IKImageBrowserItem
-
-// These methods implement the informal protocol
-// required for objects returned by a IKImageBrowswerDataSource
-
-// You need to implement each of these 
+// Implement IKImageBrowserView's informal protocol IKImageBrowserItem
 
 - (NSString*)  imageRepresentationType
 {
@@ -58,6 +51,6 @@
     // use filePath as a unique identifier for the image
     return self.filePath;
 }
-
+#pragma mark -
 
 @end

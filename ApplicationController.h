@@ -8,6 +8,8 @@
 //  portions Copyright Beepscore LLC 2010. All rights reserved.
 //
 //  App controller is a singleton object
+//  This class conforms to two IKImageBrowserView informal protocols: 
+//  IKImageBrowserDataSource and IKImageBrowserDelegate.
 
 #import <Cocoa/Cocoa.h>
 
