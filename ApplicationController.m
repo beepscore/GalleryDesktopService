@@ -299,6 +299,7 @@ static ApplicationController*		sharedApplicationController = nil;
 {
 	// HW_TODO :
     // REMOVE THE IMAGE OBJECTS AT THE GIVEN INDICES
+    [images_ removeObjectsAtIndexes:indexes];
 }
 
 - (BOOL) imageBrowser:(IKImageBrowserView *)view  moveItemsAtIndexes:(NSIndexSet *)indexes toIndex:(NSUInteger)destinationIndex
@@ -389,11 +390,9 @@ static ApplicationController*		sharedApplicationController = nil;
 		}
 	
 		[imageBrowser_ reloadData];
-    }
-	
+    }	
 	return YES;
 }
-
 
 @end
 
