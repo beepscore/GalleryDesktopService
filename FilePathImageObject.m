@@ -16,10 +16,14 @@
 
 @implementation FilePathImageObject
 
+#pragma mark -
+#pragma mark properties
+@synthesize filePath;
 
 - (void) dealloc
 {
 	// BE SURE TO CLEAN UP HERE!
+    [filePath release], filePath = nil;
 	
 	[super dealloc];
 }
@@ -32,23 +36,28 @@
 
 // You need to implement each of these 
 
-/*
 - (NSString*)  imageRepresentationType
 {
+    return IKImageBrowserPathRepresentationType;
 }
+
 
 - (id)  imageRepresentation
 {
+    return self.filePath;
 }
+
 
 - (id) imageTitle
 {
+    return self.filePath;
 }
 
 - (NSString *) imageUID
 {
-
+    // use filePath as a unique identifier for the image
+    return self.filePath;
 }
-*/
+
 
 @end

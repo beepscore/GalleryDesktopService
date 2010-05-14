@@ -80,6 +80,7 @@ static ApplicationController*		sharedApplicationController = nil;
 	// YOU CAN ALSO INCLUDES IMAGES IN YOUR APPLICATION BUNDLE
 	// JUST MAKE SURE WE HAVE THE SAME IMAGES AVAILABLE WHEN
 	// WE GRADE THIS
+    [self addImagesFromDirectory:@"/Library/Desktop Pictures/"];
 	
 	// HW_TODO:
 	// MAKE SURE THE ZOOM SLIDER AND BROWSER ZOOM ARE IN SYNC
@@ -152,29 +153,33 @@ static ApplicationController*		sharedApplicationController = nil;
 	// FIRST, MAKE SURE TO SKIP HIDDEN DIRECTORIES AND FILES
 	// USE THIS CODE OR YOUR OWN :
 	
-	//NSString* filename = [path lastPathComponent];
+	NSString* filename = [path lastPathComponent];
 	
-	//if([filename length] > 0)
-	//{		
-	//	if ( [filename characterAtIndex:0] == L'.')
-	//		return;	
-	//}
+	if([filename length] > 0)
+	{		
+		if ( [filename characterAtIndex:0] == L'.')
+			return;	
+	}
 	
 	
 	// CHECK IF THIS PATH IS A DIRECTORY
 	// IF IT IS, ADD EACH FILE IN IT RECURSIVELY
 	// YOU CAN USE THIS CODE OR YOUR OWN :
-	//BOOL isDirectory = NO;
-	//[[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory];
+	BOOL isDirectory = NO;
+	[[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory];
 	
-	//if (isDirectory)
-	//{
-	//	[self addImagesFromDirectory:path atIndex:index];
-	//	return;
-	//}	
+	if (isDirectory)
+	{
+		[self addImagesFromDirectory:path atIndex:index];
+		return;
+	}	
 	
 	// OTHERWISE JUST ADD THIS FILE
 	// CREATE A NEW MODEL OBJECT AND ADD IT TO images_
+    FilePathImageObject* tempFilePathImageObject = [[FilePathImageObject alloc] init];
+    tempFilePathImageObject.filePath = path;
+    [images_ addObject:tempFilePathImageObject];
+    [tempFilePathImageObject release];
 	
 }
 
