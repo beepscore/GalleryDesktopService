@@ -37,6 +37,7 @@
 
 - (id)  imageRepresentation
 {
+    // Returns the image to display
     return self.filePath;
 }
 

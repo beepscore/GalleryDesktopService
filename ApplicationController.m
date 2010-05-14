@@ -69,26 +69,23 @@ static ApplicationController*		sharedApplicationController = nil;
 
 -(void) awakeFromNib
 {
-	// Setup the browser with some default images that should be installed on the system
+    // Setup the browser with some default images that should be installed on the system
     images_ = [[NSMutableArray alloc] init];
 	
-	// HW_TODO :
+    [self addImagesFromDirectory:@"/Library/Desktop Pictures/"];
 
-	// ADD SOME IMAGES TO THE MODEL TO START OFF
-	// HERE IS A GOOD PLACE TO TRY : @"/Library/Desktop Pictures/"]
 	// YOU CAN ALSO INCLUDES IMAGES IN YOUR APPLICATION BUNDLE
 	// JUST MAKE SURE WE HAVE THE SAME IMAGES AVAILABLE WHEN
 	// WE GRADE THIS
-    [self addImagesFromDirectory:@"/Library/Desktop Pictures/"];
 	
-	// HW_TODO:
-	// MAKE SURE THE ZOOM SLIDER AND BROWSER ZOOM ARE IN SYNC
-		
+	// sync browser zoom to slider
+    [self.imageBrowser setZoomValue:[self.zoomSlider floatValue]];
+
 	// Make sure the image browser allows reordering
-	[imageBrowser_ setAllowsReordering:YES];
-    [imageBrowser_ setAnimates:YES];
+	[self.imageBrowser setAllowsReordering:YES];
+    [self.imageBrowser setAnimates:YES];
 	
-	//HW_TODO: 
+	// TODO: HW_TODO: 
 	//SETUP THE STYLE OF THE BROWSER CELLS HERE
 	//ANYTHING YOU LIKE, SHADOWS, TITLES, ETC
 }
@@ -143,15 +140,12 @@ static ApplicationController*		sharedApplicationController = nil;
 	[self addImageWithPath:path atIndex:[images_ count]];
 }
 
+
 - (void) addImageWithPath:(NSString *)path atIndex:(NSUInteger)index
 {   
-	// HW_TODO :
-	
 	// THIS IS WHERE WE CREATE NEW MODEL OBJECTS
 	
-	// FIRST, MAKE SURE TO SKIP HIDDEN DIRECTORIES AND FILES
-	// USE THIS CODE OR YOUR OWN :
-	
+	// skip hidden directories and files
 	NSString* filename = [path lastPathComponent];
 	
 	if([filename length] > 0)
@@ -159,11 +153,8 @@ static ApplicationController*		sharedApplicationController = nil;
 		if ( [filename characterAtIndex:0] == L'.')
 			return;	
 	}
-	
-	
-	// CHECK IF THIS PATH IS A DIRECTORY
-	// IF IT IS, ADD EACH FILE IN IT RECURSIVELY
-	// YOU CAN USE THIS CODE OR YOUR OWN :
+
+	// Check if this path is a directory. If it is, recursively add each file in it
 	BOOL isDirectory = NO;
 	[[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory];
 	
@@ -173,14 +164,14 @@ static ApplicationController*		sharedApplicationController = nil;
 		return;
 	}	
 	
-	// OTHERWISE JUST ADD THIS FILE
-	// CREATE A NEW MODEL OBJECT AND ADD IT TO images_
+	// otherwise add just this file
+	// create a new model object and add it to images_
     FilePathImageObject* tempFilePathImageObject = [[FilePathImageObject alloc] init];
     tempFilePathImageObject.filePath = path;
     [images_ addObject:tempFilePathImageObject];
-    [tempFilePathImageObject release];
-	
+    [tempFilePathImageObject release];	
 }
+
 
 - (void) addImagesFromDirectory:(NSString *) path
 {
@@ -206,41 +197,43 @@ static ApplicationController*		sharedApplicationController = nil;
         for(i=0; i<n; i++)
 			[self addImageWithPath:[path stringByAppendingPathComponent:[content objectAtIndex:i]] atIndex:index];
     }
-    else
-        [self addImageWithPath:path];
-	
+    else 
+    {
+        [self addImageWithPath:path];        
+    }
+
+	// We changed the model so make sure the image browser reloads its data 
 	[imageBrowser_ reloadData];
-	
-	// Make sure to have the image browser reload because we have changed the model
 }
 
 
 #pragma mark -
 #pragma mark Actions
 
-
 - (IBAction) sendImage:(id)sender
 {
-	// HW_TODO :
+	// TODO: HW_TODO:
 
 	// GET THE SELECTED IMAGE FROM THE BROWSER
 	// THIS WILL BE YOUR MODEL OBJECT (FilePathImageObject)
+    // If multiple images are selected, send only the first one
+	NSUInteger selectedImageIndex = [[self.imageBrowser selectionIndexes] firstIndex];
+    
+    FilePathImageObject* selectedFilePathImageObject = [images_ objectAtIndex:selectedImageIndex];
 	
+	// Create NSImage from the file the model object is pointing to
+	NSImage* image = [[NSImage alloc] initWithContentsOfFile:selectedFilePathImageObject.filePath];
 	
-	// TO SEND YOU NEED AN NSIMAGE
-	// SO CREATE ONE FROM THE FILE THE MODEL OBJECT IS POINTING TO
-	
-	
-	// FINALLY SEND IT USING THE LINE BELOW
-	//[imageShareService_ sendImageToClients:image];
+    NSLog(@"selectedImageIndex = %d  selectedFilePath = %@",
+          selectedImageIndex, selectedFilePathImageObject.filePath);
+	// send NSImage
+	[imageShareService_ sendImageToClients:image];
+    [image release];
 }
 
 - (IBAction) addImages:(id)sender
 {
-	
-	// This is how to create a standard open file panel
-	// and add the results
-	
+    // Create a standard open file panel and add the results	
     NSOpenPanel* panel;
 	
     panel = [NSOpenPanel openPanel];        
@@ -258,9 +251,9 @@ static ApplicationController*		sharedApplicationController = nil;
 		{
 			[self addImagesFromDirectory:filePath];
 		}
-    }
-    
+    }    
 }
+
 
 - (IBAction) zoomChanged:(id)sender
 {
@@ -275,8 +268,7 @@ static ApplicationController*		sharedApplicationController = nil;
 
 - (NSUInteger) numberOfItemsInImageBrowser:(IKImageBrowserView *) view
 {
-	// HW_TODO :
-    // RETURN THE # OF IMAGES IN THE MODEL
+    // return the number of images in the model
     // [[view visibleItemIndexes] count] only counts visible items?
     NSLog(@"numberOfItemsInImageBrowser = %d", [images_ count]);
     return [images_ count];
@@ -344,7 +336,7 @@ static ApplicationController*		sharedApplicationController = nil;
 
 #pragma mark -
 #pragma mark  Drag and Drop
-
+// Conform to NSDraggingDestination informal protocol
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
 	return [self draggingUpdated:sender];

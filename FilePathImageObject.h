@@ -9,6 +9,7 @@
 //
 //  This class conforms to IKImageBrowserView's informal protocol IKImageBrowserItem
 //  IKImageBrowserItem is a simple data object that holds an image path for use by IKImageBrowserDataSource
+//  Ref http://17.254.2.129/mac/library/documentation/GraphicsImaging/Reference/IKImageBrowserItem_Protocol/IKImageBrowserItem_Reference.html#//apple_ref/doc/uid/TP40004709
 
 #import <Foundation/Foundation.h>
 
