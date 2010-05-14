@@ -292,8 +292,6 @@ static ApplicationController*		sharedApplicationController = nil;
 
 - (void) imageBrowser:(IKImageBrowserView *)view removeItemsAtIndexes:(NSIndexSet *)indexes
 {
-	// HW_TODO :
-    // REMOVE THE IMAGE OBJECTS AT THE GIVEN INDICES
     [images_ removeObjectsAtIndexes:indexes];
 }
 
