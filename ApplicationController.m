@@ -76,10 +76,15 @@ static ApplicationController*		sharedApplicationController = nil;
     images_ = [[NSMutableArray alloc] init];
 
     // add images from application bundle
-    NSString* baileyPath = [[NSBundle mainBundle] pathForResource:@"baileySit100514" ofType:@"jpg"];    
-    [self addImageWithPath:baileyPath];
-    NSString *lavaPath = [[NSBundle mainBundle] pathForResource:@"Lava" ofType:@"jpg"];
-    [self addImageWithPath:lavaPath];
+    NSString* gifPath = [[NSBundle mainBundle] pathForResource:@"predict" ofType:@"gif"];    
+    [self addImageWithPath:gifPath];
+    NSString* jpgPath = [[NSBundle mainBundle] pathForResource:@"baileySit100514" ofType:@"jpg"];    
+    [self addImageWithPath:jpgPath];
+    // pdf shows in Mac browser but not on iPhone
+    NSString *pdfPath = [[NSBundle mainBundle] pathForResource:@"sunRed" ofType:@"pdf"];
+    [self addImageWithPath:pdfPath];
+    NSString *pngPath = [[NSBundle mainBundle] pathForResource:@"soyuz" ofType:@"png"];
+    [self addImageWithPath:pngPath];
     
     // add images from library
     [self addImagesFromDirectory:@"/Library/Desktop Pictures/"];   

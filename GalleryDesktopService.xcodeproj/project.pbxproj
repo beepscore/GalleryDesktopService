@@ -10,7 +10,6 @@
 		0170BC9C11965F4B00069E79 /* FilePathImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 0170BC9B11965F4B00069E79 /* FilePathImageObject.m */; };
 		0170BCAD1196603D00069E79 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0170BCAC1196603D00069E79 /* QuartzCore.framework */; };
 		0170BCB31196604C00069E79 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0170BCB21196604C00069E79 /* Quartz.framework */; };
-		01837DC71191CEB800650F7F /* Lava.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 01837DC61191CEB800650F7F /* Lava.jpg */; };
 		018C928C1155977C003349E5 /* ImageShareService.m in Sources */ = {isa = PBXBuildFile; fileRef = 018C928B1155977C003349E5 /* ImageShareService.m */; };
 		018C92B311559ABF003349E5 /* ApplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 018C92B211559ABF003349E5 /* ApplicationController.m */; };
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
@@ -19,6 +18,9 @@
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		DE0E5073119BCA2500D4E903 /* README in Resources */ = {isa = PBXBuildFile; fileRef = DE0E5072119BCA2500D4E903 /* README */; };
+		DE4BE952119E70F300A8BBFC /* soyuz.png in Resources */ = {isa = PBXBuildFile; fileRef = DE4BE951119E70F300A8BBFC /* soyuz.png */; };
+		DE4BE954119E712700A8BBFC /* sunRed.pdf in Resources */ = {isa = PBXBuildFile; fileRef = DE4BE953119E712700A8BBFC /* sunRed.pdf */; };
+		DE4BE956119E713900A8BBFC /* predict.gif in Resources */ = {isa = PBXBuildFile; fileRef = DE4BE955119E713900A8BBFC /* predict.gif */; };
 		DEBF281B119E24D100F3A293 /* baileySit100514.jpg in Resources */ = {isa = PBXBuildFile; fileRef = DEBF281A119E24D100F3A293 /* baileySit100514.jpg */; };
 /* End PBXBuildFile section */
 
@@ -27,7 +29,6 @@
 		0170BC9B11965F4B00069E79 /* FilePathImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilePathImageObject.m; sourceTree = "<group>"; };
 		0170BCAC1196603D00069E79 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		0170BCB21196604C00069E79 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
-		01837DC61191CEB800650F7F /* Lava.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Lava.jpg; sourceTree = "<group>"; };
 		018C928A1155977C003349E5 /* ImageShareService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageShareService.h; sourceTree = "<group>"; };
 		018C928B1155977C003349E5 /* ImageShareService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageShareService.m; sourceTree = "<group>"; };
 		018C92B111559ABF003349E5 /* ApplicationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicationController.h; sourceTree = "<group>"; };
@@ -45,6 +46,9 @@
 		8D1107310486CEB800E47090 /* GalleryDesktopService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GalleryDesktopService-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* GalleryDesktopService.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GalleryDesktopService.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE0E5072119BCA2500D4E903 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		DE4BE951119E70F300A8BBFC /* soyuz.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = soyuz.png; sourceTree = "<group>"; };
+		DE4BE953119E712700A8BBFC /* sunRed.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = sunRed.pdf; sourceTree = "<group>"; };
+		DE4BE955119E713900A8BBFC /* predict.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = predict.gif; sourceTree = "<group>"; };
 		DEBF281A119E24D100F3A293 /* baileySit100514.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = baileySit100514.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -132,9 +136,11 @@
 				DEBF281A119E24D100F3A293 /* baileySit100514.jpg */,
 				8D1107310486CEB800E47090 /* GalleryDesktopService-Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
-				01837DC61191CEB800650F7F /* Lava.jpg */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
+				DE4BE955119E713900A8BBFC /* predict.gif */,
 				DE0E5072119BCA2500D4E903 /* README */,
+				DE4BE951119E70F300A8BBFC /* soyuz.png */,
+				DE4BE953119E712700A8BBFC /* sunRed.pdf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -193,9 +199,11 @@
 			files = (
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
-				01837DC71191CEB800650F7F /* Lava.jpg in Resources */,
 				DE0E5073119BCA2500D4E903 /* README in Resources */,
 				DEBF281B119E24D100F3A293 /* baileySit100514.jpg in Resources */,
+				DE4BE952119E70F300A8BBFC /* soyuz.png in Resources */,
+				DE4BE954119E712700A8BBFC /* sunRed.pdf in Resources */,
+				DE4BE956119E713900A8BBFC /* predict.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
