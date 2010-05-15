@@ -59,7 +59,7 @@ static ApplicationController*		sharedApplicationController = nil;
 	self = [super init];
 	if (self != nil)
 	{
-
+        
 	}
 	return self;
 }
@@ -74,7 +74,7 @@ static ApplicationController*		sharedApplicationController = nil;
 {
     // Setup the browser with some default images that should be installed on the system
     images_ = [[NSMutableArray alloc] init];
-
+    
     // add images from application bundle
     NSString* gifPath = [[NSBundle mainBundle] pathForResource:@"predict" ofType:@"gif"];    
     [self addImageWithPath:gifPath];
@@ -91,7 +91,7 @@ static ApplicationController*		sharedApplicationController = nil;
     
     // sync browser zoom to slider
     [self.imageBrowser setZoomValue:[self.zoomSlider floatValue]];
-
+    
 	// Make sure the image browser allows reordering
 	[self.imageBrowser setAllowsReordering:YES];
     [self.imageBrowser setAnimates:YES];
@@ -154,7 +154,7 @@ static ApplicationController*		sharedApplicationController = nil;
 
 - (void) addImageWithPath:(NSString *)path atIndex:(NSUInteger)index
 {   
-	// THIS IS WHERE WE CREATE NEW MODEL OBJECTS
+	// Create a new model object
 	
 	// skip hidden directories and files
 	NSString* filename = [path lastPathComponent];
@@ -165,7 +165,7 @@ static ApplicationController*		sharedApplicationController = nil;
 		if ( [filename characterAtIndex:0] == L'.')
 			return;	
 	}
-
+    
 	// Check if this path is a directory. If it is, recursively add each file in it
 	BOOL isDirectory = NO;
 	[[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory];
@@ -184,7 +184,7 @@ static ApplicationController*		sharedApplicationController = nil;
     [tempFilePathImageObject release];
     
     // We changed the model so make sure the image browser reloads its data
-    // This message was in addImagesFromDirectory:, which calls addImageWithPath: methods.
+    // This message (aka method call) was in addImagesFromDirectory:, which calls addImageWithPath: methods.
     // Move here so it gets sent when calling addImageWithPath: alone
 	[imageBrowser_ reloadData];
 }
@@ -226,38 +226,58 @@ static ApplicationController*		sharedApplicationController = nil;
 
 - (IBAction) sendImage:(id)sender
 {
-	// Use the imageBrowser selection to get a model object (FilePathImageObject)
+	// Use the imageBrowser selection to get a model object and send an image
     
     NSIndexSet* selectedImages = [self.imageBrowser selectionIndexes];
-
-    // if no images were selected, don't try to send an image
-    if (0 == selectedImages.count)
+    
+    // if selectedImages is nil, don't try to select or send an image
+    if (nil == selectedImages)
     {
-        NSLog(@"No image selected");
+        NSLog(@"selectedImages is nil");
         return;
     }
     
-    // select only the first image in the set.
-    NSUInteger selectedImageIndex = [selectedImages firstIndex];
-
-    // defensive programming- check index is within images_ array bounds
-    // ref http://stackoverflow.com/questions/771185/cocoa-objective-c-array-beyond-bounds-question
-    if (0 <= selectedImageIndex && [images_ count] > selectedImageIndex)
+    // if selectedImages is empty, don't try to select or send an image
+    if (0 == selectedImages.count)
     {
-        // get the model object
-        FilePathImageObject* selectedFilePathImageObject = [images_ objectAtIndex:selectedImageIndex];
-        
-        // Create NSImage using the model object's filePath
-        NSImage* image = [[NSImage alloc] initWithContentsOfFile:selectedFilePathImageObject.filePath];
-        
-        NSLog(@"selectedImageIndex = %d  selectedFilePath = %@",
-              selectedImageIndex, selectedFilePathImageObject.filePath);
-        
-        // send NSImage
-        [imageShareService_ sendImageToClients:image];
-        [image release];        
+        NSLog(@"selectedImages count is zero");
+        return;
     }
+    
+    // select only the first image in the set
+    NSUInteger selectedImageIndex = [selectedImages firstIndex];
+    
+    // if no images were selected, don't try to send an image
+    // *** Note: Richard Fuhr told me if the NSIndexSet is empty, firstIndex returns -1 (NSNotFound)
+    if (NSNotFound == selectedImageIndex)
+    {
+        NSLog(@"selectedImageIndex not found");
+        return;
+    }
+    
+    // if index is outside images_ array bounds, don't try to send an image
+    // ref http://stackoverflow.com/questions/771185/cocoa-objective-c-array-beyond-bounds-question
+    // this check may be unnecessarily defensive programming
+    if (0 > selectedImageIndex || [images_ count] <= selectedImageIndex)
+    {
+        NSLog(@"selectedImageIndex outside of images_ array bounds");
+        return;        
+    }
+    
+    // get the model object
+    FilePathImageObject* selectedFilePathImageObject = [images_ objectAtIndex:selectedImageIndex];
+    
+    // Create NSImage using the model object's filePath
+    NSImage* image = [[NSImage alloc] initWithContentsOfFile:selectedFilePathImageObject.filePath];
+    
+    NSLog(@"selectedImageIndex = %d  selectedFilePath = %@",
+          selectedImageIndex, selectedFilePathImageObject.filePath);
+    
+    // send NSImage
+    [imageShareService_ sendImageToClients:image];
+    [image release];
 }
+
 
 - (IBAction) addImages:(id)sender
 {
@@ -265,7 +285,7 @@ static ApplicationController*		sharedApplicationController = nil;
     NSOpenPanel* panel;
 	
     panel = [NSOpenPanel openPanel];        
-
+    
     [panel setFloatingPanel:YES];
     [panel setCanChooseDirectories:YES];
     [panel setCanChooseFiles:YES];
@@ -326,8 +346,8 @@ static ApplicationController*		sharedApplicationController = nil;
 	// this keeps the indexs we haven't moved yet from shifting to a new position
 	// before we get to them
 	for( index = [indexes lastIndex];
-		 index != NSNotFound;
-		 index = [indexes indexLessThanIndex:index] )
+        index != NSNotFound;
+        index = [indexes indexLessThanIndex:index] )
 	{
 		if (index < destinationIndex)
 			destinationIndex--;
@@ -394,7 +414,7 @@ static ApplicationController*		sharedApplicationController = nil;
     if ([[pasteboard types] containsObject:NSFilenamesPboardType])
 	{
         data = [pasteboard dataForType:NSFilenamesPboardType];
-
+        
         NSArray* filePaths = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:kCFPropertyListImmutable format:nil errorDescription:&errorDescription];		
 		
 		
@@ -402,7 +422,7 @@ static ApplicationController*		sharedApplicationController = nil;
 		{
 			[self addImageWithPath:filePath atIndex:[imageBrowser_ indexAtLocationOfDroppedItem]];
 		}
-	
+        
 		[imageBrowser_ reloadData];
     }	
 	return YES;
