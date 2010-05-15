@@ -212,23 +212,37 @@ static ApplicationController*		sharedApplicationController = nil;
 
 - (IBAction) sendImage:(id)sender
 {
-	// TODO: HW_TODO:
-
-	// GET THE SELECTED IMAGE FROM THE BROWSER
-	// THIS WILL BE YOUR MODEL OBJECT (FilePathImageObject)
-    // If multiple images are selected, send only the first one
-	NSUInteger selectedImageIndex = [[self.imageBrowser selectionIndexes] firstIndex];
+	// Use the imageBrowser selection to get a model object (FilePathImageObject)
     
-    FilePathImageObject* selectedFilePathImageObject = [images_ objectAtIndex:selectedImageIndex];
-	
-	// Create NSImage from the file the model object is pointing to
-	NSImage* image = [[NSImage alloc] initWithContentsOfFile:selectedFilePathImageObject.filePath];
-	
-    NSLog(@"selectedImageIndex = %d  selectedFilePath = %@",
-          selectedImageIndex, selectedFilePathImageObject.filePath);
-	// send NSImage
-	[imageShareService_ sendImageToClients:image];
-    [image release];
+    NSIndexSet* selectedImages = [self.imageBrowser selectionIndexes];
+
+    // if no images were selected, don't try to send an image
+    if (0 == selectedImages.count)
+    {
+        NSLog(@"No image selected");
+        return;
+    }
+    
+    // select only the first image in the set.
+    NSUInteger selectedImageIndex = [selectedImages firstIndex];
+
+    // defensive programming- check index is within images_ array bounds
+    // ref http://stackoverflow.com/questions/771185/cocoa-objective-c-array-beyond-bounds-question
+    if (0 <= selectedImageIndex && [images_ count] > selectedImageIndex)
+    {
+        // get the model object
+        FilePathImageObject* selectedFilePathImageObject = [images_ objectAtIndex:selectedImageIndex];
+        
+        // Create NSImage using the model object's filePath
+        NSImage* image = [[NSImage alloc] initWithContentsOfFile:selectedFilePathImageObject.filePath];
+        
+        NSLog(@"selectedImageIndex = %d  selectedFilePath = %@",
+              selectedImageIndex, selectedFilePathImageObject.filePath);
+        
+        // send NSImage
+        [imageShareService_ sendImageToClients:image];
+        [image release];        
+    }
 }
 
 - (IBAction) addImages:(id)sender
