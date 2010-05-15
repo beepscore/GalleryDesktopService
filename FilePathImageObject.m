@@ -19,7 +19,7 @@
 
 - (void) dealloc
 {
-	// BE SURE TO CLEAN UP HERE!
+	// TODO: BE SURE TO CLEAN UP HERE!
     [filePath release], filePath = nil;
 	
 	[super dealloc];
@@ -44,7 +44,7 @@
 
 - (id) imageTitle
 {
-    return self.filePath;
+    return [self.filePath lastPathComponent];
 }
 
 - (NSString *) imageUID

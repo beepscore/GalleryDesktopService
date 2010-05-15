@@ -17,6 +17,9 @@
 #pragma mark Static
 static ApplicationController*		sharedApplicationController = nil;
 
+// declare anonymous category for "private" methods, avoid showing in .h file
+// Note in Objective C no method is private, it can be called from elsewhere.
+// Ref http://stackoverflow.com/questions/1052233/iphone-obj-c-anonymous-category-or-private-category
 @interface ApplicationController ()
 
 - (void) addImagesFromDirectory:(NSString*) path;
@@ -24,8 +27,8 @@ static ApplicationController*		sharedApplicationController = nil;
 - (void) addImageWithPath:(NSString *)path atIndex:(NSUInteger)index;
 - (void) addImageWithPath:(NSString *)path;
 
-
 @end
+
 
 @implementation ApplicationController
 
@@ -88,9 +91,9 @@ static ApplicationController*		sharedApplicationController = nil;
 	[self.imageBrowser setAllowsReordering:YES];
     [self.imageBrowser setAnimates:YES];
 	
-	// TODO: HW_TODO: 
-	//SETUP THE STYLE OF THE BROWSER CELLS HERE
-	//ANYTHING YOU LIKE, SHADOWS, TITLES, ETC
+    // set browser cells style
+    // ref http://developer.apple.com/mac/library/DOCUMENTATION/GraphicsImaging/Reference/IKImageBrowserView/IKImageBrowserView_Reference.html#//apple_ref/doc/c_ref/IKCellsStyleTitled
+    [self.imageBrowser setCellsStyleMask:IKCellsStyleTitled];
 }
 
 - (id)copyWithZone:(NSZone *)zone
