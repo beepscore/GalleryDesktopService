@@ -19,6 +19,7 @@
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		DE0E5073119BCA2500D4E903 /* README in Resources */ = {isa = PBXBuildFile; fileRef = DE0E5072119BCA2500D4E903 /* README */; };
+		DEBF281B119E24D100F3A293 /* baileySit100514.jpg in Resources */ = {isa = PBXBuildFile; fileRef = DEBF281A119E24D100F3A293 /* baileySit100514.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		8D1107310486CEB800E47090 /* GalleryDesktopService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GalleryDesktopService-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* GalleryDesktopService.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GalleryDesktopService.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE0E5072119BCA2500D4E903 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		DEBF281A119E24D100F3A293 /* baileySit100514.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = baileySit100514.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,11 +129,12 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				DE0E5072119BCA2500D4E903 /* README */,
-				01837DC61191CEB800650F7F /* Lava.jpg */,
+				DEBF281A119E24D100F3A293 /* baileySit100514.jpg */,
 				8D1107310486CEB800E47090 /* GalleryDesktopService-Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+				01837DC61191CEB800650F7F /* Lava.jpg */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
+				DE0E5072119BCA2500D4E903 /* README */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -192,6 +195,7 @@
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				01837DC71191CEB800650F7F /* Lava.jpg in Resources */,
 				DE0E5073119BCA2500D4E903 /* README in Resources */,
+				DEBF281B119E24D100F3A293 /* baileySit100514.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

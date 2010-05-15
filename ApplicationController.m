@@ -71,14 +71,17 @@ static ApplicationController*		sharedApplicationController = nil;
 {
     // Setup the browser with some default images that should be installed on the system
     images_ = [[NSMutableArray alloc] init];
-	
-    [self addImagesFromDirectory:@"/Library/Desktop Pictures/"];
 
-	// YOU CAN ALSO INCLUDES IMAGES IN YOUR APPLICATION BUNDLE
-	// JUST MAKE SURE WE HAVE THE SAME IMAGES AVAILABLE WHEN
-	// WE GRADE THIS
-	
-	// sync browser zoom to slider
+    // add images from application bundle
+    NSString* baileyPath = [[NSBundle mainBundle] pathForResource:@"baileySit100514" ofType:@"jpg"];    
+    [self addImageWithPath:baileyPath];
+    NSString *lavaPath = [[NSBundle mainBundle] pathForResource:@"Lava" ofType:@"jpg"];
+    [self addImageWithPath:lavaPath];
+    
+    // add images from library
+    [self addImagesFromDirectory:@"/Library/Desktop Pictures/"];   
+    
+    // sync browser zoom to slider
     [self.imageBrowser setZoomValue:[self.zoomSlider floatValue]];
 
 	// Make sure the image browser allows reordering
@@ -150,6 +153,7 @@ static ApplicationController*		sharedApplicationController = nil;
 	
 	if([filename length] > 0)
 	{		
+        // L denotes a wide-character literal
 		if ( [filename characterAtIndex:0] == L'.')
 			return;	
 	}
@@ -169,7 +173,12 @@ static ApplicationController*		sharedApplicationController = nil;
     FilePathImageObject* tempFilePathImageObject = [[FilePathImageObject alloc] init];
     tempFilePathImageObject.filePath = path;
     [images_ addObject:tempFilePathImageObject];
-    [tempFilePathImageObject release];	
+    [tempFilePathImageObject release];
+    
+    // We changed the model so make sure the image browser reloads its data
+    // This message was in addImagesFromDirectory:, which calls addImageWithPath: methods.
+    // Move here so it gets sent when calling addImageWithPath: alone
+	[imageBrowser_ reloadData];
 }
 
 
@@ -201,9 +210,6 @@ static ApplicationController*		sharedApplicationController = nil;
     {
         [self addImageWithPath:path];        
     }
-
-	// We changed the model so make sure the image browser reloads its data 
-	[imageBrowser_ reloadData];
 }
 
 
