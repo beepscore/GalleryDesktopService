@@ -1,7 +1,7 @@
 //
 // IPHONE AND COCOA DEVELOPMENT AUSP10
 //	
-//  ImageShareService.h
+//  ImageShareService.m
 //	HW7
 //
 //  portions Copyright 2010 Chris Parrish
@@ -21,6 +21,10 @@
 NSString* const			kServiceTypeString		= @"_uwcelistener._tcp.";
 NSString* const			kServiceNameString		= @"Images";
 const	int				kListenPort				= 8082;
+
+NSString* const kConnectionKey = @"connectionKey";
+NSString* const kImageSizeKey = @"imageSize";
+NSString* const kRepresentationToSendKey = @"representationToSend";
 
 @interface ImageShareService ()
 
@@ -67,15 +71,15 @@ const	int				kListenPort				= 8082;
 - (BOOL) startService
 {
 	socket_ = CFSocketCreate
-		(
-			kCFAllocatorDefault,
-			PF_INET,
-			SOCK_STREAM,
-			IPPROTO_TCP,
-			0,
-			NULL,
-			NULL
-		 );
+    (
+     kCFAllocatorDefault,
+     PF_INET,
+     SOCK_STREAM,
+     IPPROTO_TCP,
+     0,
+     NULL,
+     NULL
+     );
 	
 	// Create a network socket for streaming TCP
 	
@@ -93,11 +97,11 @@ const	int				kListenPort				= 8082;
 	// when restartnig and debugging
 	
 	int result = setsockopt(
-								fileDescriptor,
-								SOL_SOCKET,
-								SO_REUSEADDR,
-								(void *)&reuse,
-								sizeof(int)
+                            fileDescriptor,
+                            SOL_SOCKET,
+                            SO_REUSEADDR,
+                            (void *)&reuse,
+                            sizeof(int)
 							);
 	
 	
@@ -140,10 +144,10 @@ const	int				kListenPort				= 8082;
 	connectionFileHandle_ = [[NSFileHandle alloc] initWithFileDescriptor:fileDescriptor closeOnDealloc:YES];
 	
 	[[NSNotificationCenter defaultCenter]
-		addObserver:self
-		selector:@selector(handleIncomingConnection:) 
-	        name:NSFileHandleConnectionAcceptedNotification
-		  object:nil];
+     addObserver:self
+     selector:@selector(handleIncomingConnection:) 
+     name:NSFileHandleConnectionAcceptedNotification
+     object:nil];
 	
 	[connectionFileHandle_ acceptConnectionInBackgroundAndNotify];
 	
@@ -162,9 +166,9 @@ const	int				kListenPort				= 8082;
 	CFRelease(computerName);
 	
 	NSNetService* netService = [[NSNetService alloc] initWithDomain:@"" 
-												 type:kServiceTypeString
-												 name:serviceNameString 
-												 port:kListenPort];
+                                                               type:kServiceTypeString
+                                                               name:serviceNameString 
+                                                               port:kListenPort];
 	// publish on the default domains
 	
     [netService setDelegate:self];
@@ -295,14 +299,24 @@ const	int				kListenPort				= 8082;
 	}
 	
 	[[NSNotificationCenter defaultCenter] 
-		removeObserver:self
-	              name:NSFileHandleDataAvailableNotification
-	            object:fileHandle];
+     removeObserver:self
+     name:NSFileHandleDataAvailableNotification
+     object:fileHandle];
 }
 
 
 #pragma mark -
 #pragma mark Sending
+- (void)asyncSendWithDictionary:(NSMutableDictionary*)sendArgumentsDictionary {
+    
+    NSFileHandle* connection = [sendArgumentsDictionary objectForKey:kConnectionKey];
+    NSData* imageSize = [sendArgumentsDictionary objectForKey:kImageSizeKey];
+    NSData* representationToSend = [sendArgumentsDictionary objectForKey:kRepresentationToSendKey];    
+    
+    [connection writeData:imageSize];
+    [connection writeData:representationToSend];
+}
+
 
 - (void) sendImageToClients:(NSImage*)image
 {
@@ -313,10 +327,10 @@ const	int				kListenPort				= 8082;
 		[appController_ appendStringToLog:@"No clients connected, not sending"];		
 		return;
 	}
-
+    
 	NSBitmapImageRep* imageRep = [[image representations] objectAtIndex:0];	
 	NSData* representationToSend = [imageRep representationUsingType:NSPNGFileType properties:nil];
-		
+    
 	// NOTE : this will only work when the image has a bitmap representation of some type
 	// an EPS or PDF for instance do not and in that case imageRep will not be a NSBitmapImageRep
 	// and then representationUsingType will fail
@@ -324,12 +338,12 @@ const	int				kListenPort				= 8082;
 	// then save that context in a format like PNG
 	// There are some downsides to this though, because for instance a jpeg will recompress
 	// so you would want to use a rep when you have it and if not, create one. 
-
+    
 	// NOTE 2: We could try to just send the file as data rather than 
 	// an NSImage. The problem is the iPhone doesn't support as many
 	// image formats as the desktop. The translation to PNG insures
 	// something the iPhone can display
-
+    
 	// The first thing we send is 4 bytes that represent the length of
 	// of the image so that the client will know when a full image has 
 	// transfered
@@ -337,45 +351,41 @@ const	int				kListenPort				= 8082;
 	
 	NSUInteger imageDataSize = [representationToSend length];
 	
+    
+    // the length method returns an NSUInteger, which happens to be 64 bits 
+	// or 8 bytes in length on the desktop. On the phone NSUInteger is 32 bits
+	// we are simply going to not send anything that is so big that it
+	// length is > 2^32, which should be fine considering the iPhone client
+	// could not handle images that large anyway    
 	if ( imageDataSize > UINT32_MAX )
 	{
 		[appController_ appendStringToLog:[NSString stringWithFormat:@"Image is too large to send (%ld bytes", imageDataSize]];	
 		return;
 	}
+    
+    // We also have to be careful and make sure that the bytes are in the proper order
+	// when sent over the network using htonl()
 	uint32 dataLength = htonl( (uint32)imageDataSize );
 	NSData*	imageSize = [NSData dataWithBytes:&dataLength length:sizeof(unsigned int)];
-
-	// the length method returns an NSUInteger, which happens to be 64 bits 
-	// or 8 bytes in length on the desktop. On the phone NSUInteger is 32 bits
-	// we are simply going to not send anything that is so big that it
-	// length is > 2^32, which should be fine considering the iPhone client
-	// could not handle images that large anyway
-	// We also have to be careful and make sure that the bytes are in the proper order
-	// when sent over the network using htonl()
-	
-	
-	//HW_TODO :
-	//
-	// HERE IS THE BONUS OPPORTUNITY! 
-	// THIS SYNCHRONOUS SENDING IS TERRIBLE. THE UI LOCKS UP
-	// UNTIL THE IMAGE IS SENT
-	// 100 PTS FOR A SOLUTION THAT MAKES THIS AN ASYNCHRONOUS SEND
-	// THAT FREES UP THE UI IMMEDIATELY AFTER PRESSING SEND
-	// 23 BONUS PTS FOR A PROGRESS INDICATOR DURING THE SENDING
-	
+    
+    
 	for ( NSFileHandle* connection in connectedFileHandles_)
 	{
-		// First write out the size of the image data we are sending
-		// Then send the image
-		[connection writeData:imageSize];
-		[connection writeData:representationToSend];
-	}
-	
-	
-	[appController_ appendStringToLog:[NSString stringWithFormat:@"Sent image to %d clients", clientCount]];
-	
+        // make a dictionary to hold multiple arguments in one object
+        // for performSelectorInBackground:withObject:
+        NSMutableDictionary* sendArgumentsDictionary =
+        [[NSMutableDictionary alloc] initWithObjectsAndKeys:connection, kConnectionKey,
+         imageSize, kImageSizeKey,
+         representationToSend, kRepresentationToSendKey, nil];
+        
+        // send asynchronously to avoid locking up UI
+        // Thanks to suggestions from Greg Anderson and Pam DeBriere
+        // including performSelectorInBackground:withObject:
+        [self performSelectorInBackground:@selector(asyncSendWithDictionary:) 
+                               withObject:sendArgumentsDictionary];
+        [sendArgumentsDictionary release];
+    }
+	[appController_ appendStringToLog:[NSString stringWithFormat:@"Sent image to %d clients", clientCount]];	
 }
-
-
 
 @end

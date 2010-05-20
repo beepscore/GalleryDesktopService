@@ -286,6 +286,8 @@ static ApplicationController*		sharedApplicationController = nil;
     // send NSImage    
     [imageShareService_ sendImageToClients:image];
     
+    // the send is asynchronous, so imageShareService_ could call back to stop the animation.
+    // for now, do a "quick and dirty" stop
     [self.progressIndicator stopAnimation:self];
     [image release];
 }
