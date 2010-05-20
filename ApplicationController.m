@@ -35,6 +35,7 @@ static ApplicationController*		sharedApplicationController = nil;
 @synthesize logTextField = logTextField_;
 @synthesize imageBrowser = imageBrowser_;
 @synthesize zoomSlider = zoomSlider_;
+@synthesize progressIndicator;
 
 #pragma mark Singleton
 // Note : This is how Apple recommends implementing a singleton class :
@@ -67,6 +68,7 @@ static ApplicationController*		sharedApplicationController = nil;
 - (void) dealloc
 {
 	[images_ release];
+
 	[super dealloc];
 }
 
@@ -161,8 +163,8 @@ static ApplicationController*		sharedApplicationController = nil;
 	
 	if([filename length] > 0)
 	{		
-        // L denotes a wide-character literal
-		if ( [filename characterAtIndex:0] == L'.')
+        // L denotes a wide-character literal (16 bit)
+		if ( L'.' == [filename characterAtIndex:0] )
 			return;	
 	}
     
@@ -273,8 +275,18 @@ static ApplicationController*		sharedApplicationController = nil;
     NSLog(@"selectedImageIndex = %d  selectedFilePath = %@",
           selectedImageIndex, selectedFilePathImageObject.filePath);
     
-    // send NSImage
+    // in IB, set progressIndicator to display when stopped.
+    // usually the send completes quickly, especially when sending to the simulator.
+    // if the progressIndicator is not set to display when stopped,
+    // the send may complete before the progressIndicator and animation appear.
+    // can test a "display when stopped" progressIndicator by attempting to send a pdf file,
+    // which isn't supported and so takes forever
+    [self.progressIndicator startAnimation:self];
+    
+    // send NSImage    
     [imageShareService_ sendImageToClients:image];
+    
+    [self.progressIndicator stopAnimation:self];
     [image release];
 }
 
@@ -317,16 +329,15 @@ static ApplicationController*		sharedApplicationController = nil;
 - (NSUInteger) numberOfItemsInImageBrowser:(IKImageBrowserView *) view
 {
     // return the number of images in the model
-    // [[view visibleItemIndexes] count] only counts visible items?
-    NSLog(@"numberOfItemsInImageBrowser = %d", [images_ count]);
+    NSLog(@"number of images in the model = %d", [images_ count]);
+    NSLog(@"number of items visible = %d", [[view visibleItemIndexes] count]);
     return [images_ count];
 }
 
 - (id) imageBrowser:(IKImageBrowserView *) aBrowser itemAtIndex:(NSUInteger)index;
 
 {
-	// HW_TODO :
-    // RETURN THE IMAGE MODEL OBJECT AT THE GIVEN INDEX
+    // return the image model object at the given index
     return [images_ objectAtIndex:index];
 }
 

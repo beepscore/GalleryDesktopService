@@ -19,7 +19,6 @@
 
 - (void) dealloc
 {
-	// TODO: BE SURE TO CLEAN UP HERE!
     [filePath release], filePath = nil;
 	
 	[super dealloc];

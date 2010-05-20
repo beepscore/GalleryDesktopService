@@ -24,12 +24,18 @@
 	IKImageBrowserView*		imageBrowser_;
 	NSSlider*				zoomSlider_;
 	
+    // MVC Model object
 	NSMutableArray*			images_;
+    
+    NSProgressIndicator* progressIndicator;
 }
-
+// Apple recommends on Mac assign IBOutlet, on iPhone retain IBOutlet
+// applies only to nib top-level objects?
 @property (nonatomic, assign) IBOutlet NSTextView*			logTextField;
 @property (nonatomic, assign) IBOutlet IKImageBrowserView*	imageBrowser;
 @property (nonatomic, assign) IBOutlet NSSlider*			zoomSlider;
+
+@property(nonatomic, assign)IBOutlet NSProgressIndicator *progressIndicator;
 
 + (ApplicationController*)sharedApplicationController;
 
