@@ -85,7 +85,7 @@ static ApplicationController*		sharedApplicationController = nil;
     // pdf shows in Mac browser but not on iPhone
     NSString *pdfPath = [[NSBundle mainBundle] pathForResource:@"sunRed" ofType:@"pdf"];
     [self addImageWithPath:pdfPath];
-    NSString *pngPath = [[NSBundle mainBundle] pathForResource:@"soyuz" ofType:@"png"];
+    NSString *pngPath = [[NSBundle mainBundle] pathForResource:@"russianRocket" ofType:@"png"];
     [self addImageWithPath:pngPath];
     
     // add images from library

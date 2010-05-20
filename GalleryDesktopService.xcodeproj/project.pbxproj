@@ -18,9 +18,9 @@
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		DE0E5073119BCA2500D4E903 /* README in Resources */ = {isa = PBXBuildFile; fileRef = DE0E5072119BCA2500D4E903 /* README */; };
-		DE4BE952119E70F300A8BBFC /* soyuz.png in Resources */ = {isa = PBXBuildFile; fileRef = DE4BE951119E70F300A8BBFC /* soyuz.png */; };
 		DE4BE954119E712700A8BBFC /* sunRed.pdf in Resources */ = {isa = PBXBuildFile; fileRef = DE4BE953119E712700A8BBFC /* sunRed.pdf */; };
 		DE4BE956119E713900A8BBFC /* predict.gif in Resources */ = {isa = PBXBuildFile; fileRef = DE4BE955119E713900A8BBFC /* predict.gif */; };
+		DE7DD88911A4BAC600F49795 /* russianRocket.png in Resources */ = {isa = PBXBuildFile; fileRef = DE7DD88811A4BAC600F49795 /* russianRocket.png */; };
 		DEBF281B119E24D100F3A293 /* baileySit100514.jpg in Resources */ = {isa = PBXBuildFile; fileRef = DEBF281A119E24D100F3A293 /* baileySit100514.jpg */; };
 /* End PBXBuildFile section */
 
@@ -46,9 +46,9 @@
 		8D1107310486CEB800E47090 /* GalleryDesktopService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GalleryDesktopService-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* GalleryDesktopService.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GalleryDesktopService.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE0E5072119BCA2500D4E903 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		DE4BE951119E70F300A8BBFC /* soyuz.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = soyuz.png; sourceTree = "<group>"; };
 		DE4BE953119E712700A8BBFC /* sunRed.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = sunRed.pdf; sourceTree = "<group>"; };
 		DE4BE955119E713900A8BBFC /* predict.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = predict.gif; sourceTree = "<group>"; };
+		DE7DD88811A4BAC600F49795 /* russianRocket.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = russianRocket.png; sourceTree = "<group>"; };
 		DEBF281A119E24D100F3A293 /* baileySit100514.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = baileySit100514.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -139,7 +139,7 @@
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
 				DE4BE955119E713900A8BBFC /* predict.gif */,
 				DE0E5072119BCA2500D4E903 /* README */,
-				DE4BE951119E70F300A8BBFC /* soyuz.png */,
+				DE7DD88811A4BAC600F49795 /* russianRocket.png */,
 				DE4BE953119E712700A8BBFC /* sunRed.pdf */,
 			);
 			name = Resources;
@@ -201,9 +201,9 @@
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				DE0E5073119BCA2500D4E903 /* README in Resources */,
 				DEBF281B119E24D100F3A293 /* baileySit100514.jpg in Resources */,
-				DE4BE952119E70F300A8BBFC /* soyuz.png in Resources */,
 				DE4BE954119E712700A8BBFC /* sunRed.pdf in Resources */,
 				DE4BE956119E713900A8BBFC /* predict.gif in Resources */,
+				DE7DD88911A4BAC600F49795 /* russianRocket.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
