@@ -307,8 +307,11 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
 
 #pragma mark -
 #pragma mark Sending
-- (void)asyncSendWithDictionary:(NSMutableDictionary*)sendArgumentsDictionary {
-    
+- (void)sendWithDictionary:(NSMutableDictionary*)sendArgumentsDictionary
+{
+    // sendWithDictionary: has one parameter, a dictionary.
+    // This way, sendWithDictionary: can be called from performSelectorInBackground:withObject:    
+    // The dictionary object contains multiple objects as "arguments" for use by the method
     NSFileHandle* connection = [sendArgumentsDictionary objectForKey:kConnectionKey];
     NSData* imageSize = [sendArgumentsDictionary objectForKey:kImageSizeKey];
     NSData* representationToSend = [sendArgumentsDictionary objectForKey:kRepresentationToSendKey];    
@@ -347,10 +350,8 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
 	// The first thing we send is 4 bytes that represent the length of
 	// of the image so that the client will know when a full image has 
 	// transfered
-	
-	
+    
 	NSUInteger imageDataSize = [representationToSend length];
-	
     
     // the length method returns an NSUInteger, which happens to be 64 bits 
 	// or 8 bytes in length on the desktop. On the phone NSUInteger is 32 bits
@@ -371,8 +372,7 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
     
 	for ( NSFileHandle* connection in connectedFileHandles_)
 	{
-        // make a dictionary to hold multiple arguments in one object
-        // for performSelectorInBackground:withObject:
+        // make a dictionary for sendWithDictionary:
         NSMutableDictionary* sendArgumentsDictionary =
         [[NSMutableDictionary alloc] initWithObjectsAndKeys:connection, kConnectionKey,
          imageSize, kImageSizeKey,
@@ -380,8 +380,11 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
         
         // send asynchronously to avoid locking up UI
         // Thanks to suggestions from Greg Anderson and Pam DeBriere
-        // including performSelectorInBackground:withObject:
-        [self performSelectorInBackground:@selector(asyncSendWithDictionary:) 
+        // including using performSelectorInBackground:withObject: to create a new thread
+        
+        // Note: if iPhone client is stopped during send, application throws exception
+        // Currently exception is not handled and stops program execution
+        [self performSelectorInBackground:@selector(sendWithDictionary:) 
                                withObject:sendArgumentsDictionary];
         [sendArgumentsDictionary release];
     }
