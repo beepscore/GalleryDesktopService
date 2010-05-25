@@ -21,7 +21,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="372"/>
+			<integer value="622"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1582,7 +1582,7 @@ LiA</string>
 							<object class="NSPSMatrix" key="NSDrawMatrix"/>
 							<string key="NSFrame">{{850, 10}, {32, 32}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
-							<int key="NSpiFlags">20490</int>
+							<int key="NSpiFlags">28682</int>
 							<double key="NSMaxValue">100</double>
 						</object>
 						<object class="NSButton" id="934936218">
@@ -4284,9 +4284,9 @@ LiA</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{1560, 120}, {1011, 669}}</string>
+					<string>{{163, 154}, {1011, 669}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{1560, 120}, {1011, 669}}</string>
+					<string>{{163, 154}, {1011, 669}}</string>
 					<integer value="1"/>
 					<string>{{33, 99}, {480, 360}}</string>
 					<boolean value="YES"/>

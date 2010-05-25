@@ -383,13 +383,9 @@ static ApplicationController*		sharedApplicationController = nil;
 #pragma mark -
 #pragma mark IKImageBrowserDelegate
 // Implement IKImageBrowserView's informal protocol IKImageBrowserDelegate
-
 - (void) imageBrowser:(IKImageBrowserView *) aBrowser cellWasDoubleClickedAtIndex:(NSUInteger) index
 {
-	// HW_TODO :
-	// TREAT A DOUBLE CLICK AS A SEND OF THE IMAGE
-	// INSTEAD OF THE DEFAULT TO OPEN
-	
+    [self sendImage:self];	
 }
 
 
