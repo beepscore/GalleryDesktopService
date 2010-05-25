@@ -276,12 +276,6 @@ static ApplicationController*		sharedApplicationController = nil;
     NSLog(@"selectedImageIndex = %d  selectedFilePath = %@",
           selectedImageIndex, selectedFilePathImageObject.filePath);
     
-    // in IB, set progressIndicator to display when stopped.
-    // usually the send completes quickly, especially when sending to the simulator.
-    // if the progressIndicator is not set to display when stopped,
-    // the send may complete before the progressIndicator and animation appear.
-    // can test a "display when stopped" progressIndicator by attempting to send a pdf file,
-    // which isn't supported and so takes forever
     [self.progressIndicator startAnimation:self];
     
     // send NSImage    

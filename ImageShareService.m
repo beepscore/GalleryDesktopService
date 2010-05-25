@@ -100,7 +100,7 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
 	
 	// Make sure socket is set for reuse of the address
 	// without this, you may find that the socket is already in use
-	// when restartnig and debugging
+	// when restarting and debugging
 	
 	int result = setsockopt(
                             fileDescriptor,
@@ -110,17 +110,16 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
                             sizeof(int)
 							);
 	
-	
-	
+
 	if ( result != 0)
 	{
 		[appController_ appendStringToLog:@"Unable to set socket options"];
 		return NO;
 	}
 	
-	// Create the address for the scoket. 
+	// Create the address for the socket. 
 	// In this case we don't care what address is incoming
-	// but we listen on a specific port - kLisenPort
+	// but we listen on a specific port - kListenPort
 	
 	struct sockaddr_in address;
 	memset(&address, 0, sizeof(address));
@@ -166,7 +165,7 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
 
 - (void) publishService
 {
-	// Create a name for the service that include's this computer's name
+	// Create a name for the service that includes this computer's name
 	CFStringRef computerName = CSCopyMachineName();
 	NSString* serviceNameString = [NSString stringWithFormat:@"%@'s %@", (NSString*)computerName, kServiceNameString];
 	CFRelease(computerName);
@@ -175,8 +174,7 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
                                                                type:kServiceTypeString
                                                                name:serviceNameString 
                                                                port:kListenPort];
-	// publish on the default domains
-	
+	// publish on the default domains	
     [netService setDelegate:self];
     [netService publish];
 	
@@ -218,9 +216,20 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
 - (void) readIncomingData:(NSNotification*) notification
 {
 	NSFileHandle*	readFileHandle	= [notification object];
-	NSData*			newData			= [readFileHandle availableData];
-	
-	NSMutableData*	dataSoFar		= [self dataForFileHandle:readFileHandle];
+
+    // suggestion from Sean Quinlan
+    // the catch block ensures readIncomingData will call stopReceivingForFileHandle before it exits
+    NSData* newData = nil;
+    @try {
+        newData	= [readFileHandle availableData];
+    }
+    // @catch could return type NSException* instead of type id
+    @catch (id e) {
+        // log error
+        NSLog(@"Error in readIncomingData:");
+    }    
+
+    NSMutableData*	dataSoFar = [self dataForFileHandle:readFileHandle];
 	
 	if ([newData length] == 0)
 	{
@@ -322,9 +331,30 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
     NSData* imageSize = [sendArgumentsDictionary objectForKey:kImageSizeKey];
     NSData* representationToSend = [sendArgumentsDictionary objectForKey:kRepresentationToSendKey];    
     
-    [connection writeData:imageSize];
-    [connection writeData:representationToSend];
+    // TODO: Add autorelease pool.
+    // If iPhone client quits during send, console logs
+    // _NSCallStackArray autoreleased with no pool in place - just leaking
     
+    // suggestion from Sean Quinlan
+    // if we lose a connection and have a "bad socket", these catch blocks around writeData
+    // allows the server to write to other valid connections.
+    @try {
+        [connection writeData:imageSize];
+    }
+    // @catch could return type NSException* instead of type id
+    @catch (id e) {
+        // log error
+        NSLog(@"Error in sendWithDictionary: sending image size.");
+    }    
+    
+    @try {
+        [connection writeData:representationToSend];
+    }
+    @catch (id e) {
+        // log error
+        NSLog(@"Error in sendWithDictionary: sending image.");
+    }    
+        
     // Notify delegate the send is complete
     // The delegate controls the view.
     // View related methods are not thread safe and must be performed on the main thread.
@@ -394,9 +424,6 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
         // send asynchronously to avoid locking up UI
         // Thanks to suggestions from Greg Anderson and Pam DeBriere
         // including using performSelectorInBackground:withObject: to create a new thread
-        
-        // Note: if iPhone client is stopped during send, application throws exception
-        // Currently exception is not handled and stops program execution
         [self performSelectorInBackground:@selector(sendWithDictionary:) 
                                withObject:sendArgumentsDictionary];
         [sendArgumentsDictionary release];
