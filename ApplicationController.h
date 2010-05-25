@@ -13,10 +13,13 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class ImageShareService;
+// import ImageShareService.h to see the ImageShareServiceProtocol declaration
+#import "ImageShareService.h"
+
 @class IKImageBrowserView;
 
-@interface ApplicationController : NSObject
+// declare ApplicationController implements ImageShareServiceProtocol
+@interface ApplicationController : NSObject <ImageShareServiceProtocol>
 {
 	NSTextView*				logTextField_;
 	ImageShareService*		imageShareService_;

@@ -37,6 +37,9 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
 
 @implementation ImageShareService
 
+#pragma mark properties
+@synthesize delegate;
+
 - (id) init
 {
 	self = [super init];
@@ -64,6 +67,9 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
 	
 	[connectedFileHandles_ release];
 	connectedFileHandles_ = nil;
+    
+    // a delegator doesn't retain it's delegate, and so it doesn't release it
+    delegate = nil;
 	
 	[super dealloc];
 }
@@ -318,60 +324,67 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
     
     [connection writeData:imageSize];
     [connection writeData:representationToSend];
+    
+    // Notify delegate the send is complete
+    // The delegate controls the view.
+    // View related methods are not thread safe and must be performed on the main thread.
+    [self.delegate performSelectorOnMainThread:@selector(imageShareServiceDidSend:)
+                                    withObject:self
+                                 waitUntilDone:NO];
 }
 
 
 - (void) sendImageToClients:(NSImage*)image
 {
-	NSUInteger clientCount = [connectedFileHandles_ count];
-	
-	if( clientCount <= 0 )
-	{
-		[appController_ appendStringToLog:@"No clients connected, not sending"];		
-		return;
-	}
+    NSUInteger clientCount = [connectedFileHandles_ count];
     
-	NSBitmapImageRep* imageRep = [[image representations] objectAtIndex:0];	
-	NSData* representationToSend = [imageRep representationUsingType:NSPNGFileType properties:nil];
+    if( clientCount <= 0 )
+    {
+        [appController_ appendStringToLog:@"No clients connected, not sending"];		
+        return;
+    }
     
-	// NOTE : this will only work when the image has a bitmap representation of some type
-	// an EPS or PDF for instance do not and in that case imageRep will not be a NSBitmapImageRep
-	// and then representationUsingType will fail
-	// To do this better we could draw the image into an offscreen context
-	// then save that context in a format like PNG
-	// There are some downsides to this though, because for instance a jpeg will recompress
-	// so you would want to use a rep when you have it and if not, create one. 
+    NSBitmapImageRep* imageRep = [[image representations] objectAtIndex:0];	
+    NSData* representationToSend = [imageRep representationUsingType:NSPNGFileType properties:nil];
     
-	// NOTE 2: We could try to just send the file as data rather than 
-	// an NSImage. The problem is the iPhone doesn't support as many
-	// image formats as the desktop. The translation to PNG insures
-	// something the iPhone can display
+    // NOTE : this will only work when the image has a bitmap representation of some type
+    // an EPS or PDF for instance do not and in that case imageRep will not be a NSBitmapImageRep
+    // and then representationUsingType will fail
+    // To do this better we could draw the image into an offscreen context
+    // then save that context in a format like PNG
+    // There are some downsides to this though, because for instance a jpeg will recompress
+    // so you would want to use a rep when you have it and if not, create one. 
     
-	// The first thing we send is 4 bytes that represent the length of
-	// of the image so that the client will know when a full image has 
-	// transfered
+    // NOTE 2: We could try to just send the file as data rather than 
+    // an NSImage. The problem is the iPhone doesn't support as many
+    // image formats as the desktop. The translation to PNG insures
+    // something the iPhone can display
     
-	NSUInteger imageDataSize = [representationToSend length];
+    // The first thing we send is 4 bytes that represent the length of
+    // of the image so that the client will know when a full image has 
+    // transfered
+    
+    NSUInteger imageDataSize = [representationToSend length];
     
     // the length method returns an NSUInteger, which happens to be 64 bits 
-	// or 8 bytes in length on the desktop. On the phone NSUInteger is 32 bits
-	// we are simply going to not send anything that is so big that it
-	// length is > 2^32, which should be fine considering the iPhone client
-	// could not handle images that large anyway    
-	if ( imageDataSize > UINT32_MAX )
-	{
-		[appController_ appendStringToLog:[NSString stringWithFormat:@"Image is too large to send (%ld bytes", imageDataSize]];	
-		return;
-	}
+    // or 8 bytes in length on the desktop. On the phone NSUInteger is 32 bits
+    // we are simply going to not send anything that is so big that it
+    // length is > 2^32, which should be fine considering the iPhone client
+    // could not handle images that large anyway    
+    if ( imageDataSize > UINT32_MAX )
+    {
+        [appController_ appendStringToLog:[NSString stringWithFormat:@"Image is too large to send (%ld bytes", imageDataSize]];	
+        return;
+    }
     
     // We also have to be careful and make sure that the bytes are in the proper order
-	// when sent over the network using htonl()
-	uint32 dataLength = htonl( (uint32)imageDataSize );
-	NSData*	imageSize = [NSData dataWithBytes:&dataLength length:sizeof(unsigned int)];
+    // when sent over the network using htonl()
+    uint32 dataLength = htonl( (uint32)imageDataSize );
+    NSData*	imageSize = [NSData dataWithBytes:&dataLength length:sizeof(unsigned int)];
     
     
-	for ( NSFileHandle* connection in connectedFileHandles_)
-	{
+    for ( NSFileHandle* connection in connectedFileHandles_)
+    {
         // make a dictionary for sendWithDictionary:
         NSMutableDictionary* sendArgumentsDictionary =
         [[NSMutableDictionary alloc] initWithObjectsAndKeys:connection, kConnectionKey,
@@ -388,7 +401,7 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
                                withObject:sendArgumentsDictionary];
         [sendArgumentsDictionary release];
     }
-	[appController_ appendStringToLog:[NSString stringWithFormat:@"Sent image to %d clients", clientCount]];	
+    [appController_ appendStringToLog:[NSString stringWithFormat:@"Sent image to %d clients", clientCount]];	
 }
 
 @end

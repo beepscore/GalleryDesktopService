@@ -9,7 +9,6 @@
 //
 
 #import "ApplicationController.h"
-#import "ImageShareService.h"
 #import "FilePathImageObject.h"
 #import <Quartz/Quartz.h>
 
@@ -101,6 +100,7 @@ static ApplicationController*		sharedApplicationController = nil;
     // set browser cells style
     // ref http://developer.apple.com/mac/library/DOCUMENTATION/GraphicsImaging/Reference/IKImageBrowserView/IKImageBrowserView_Reference.html#//apple_ref/doc/c_ref/IKCellsStyleTitled
     [self.imageBrowser setCellsStyleMask:IKCellsStyleTitled];
+    
 }
 
 - (id)copyWithZone:(NSZone *)zone
@@ -140,6 +140,7 @@ static ApplicationController*		sharedApplicationController = nil;
 - (void) startService
 {
 	imageShareService_ = [[ImageShareService alloc] init];
+    [imageShareService_ setDelegate:self];
 	[imageShareService_ startService];
 	[imageShareService_ publishService];
 }
@@ -286,9 +287,6 @@ static ApplicationController*		sharedApplicationController = nil;
     // send NSImage    
     [imageShareService_ sendImageToClients:image];
     
-    // the send is asynchronous, so imageShareService_ could call back to stop the animation.
-    // for now, do a "quick and dirty" stop
-    [self.progressIndicator stopAnimation:self];
     [image release];
 }
 
@@ -441,9 +439,14 @@ static ApplicationController*		sharedApplicationController = nil;
 	return YES;
 }
 
+
+#pragma mark -
+#pragma mark ImageShareServiceDelegate
+// Implement ImageShareService's formal protocol ImageShareServiceDelegate
+// when the asynchronous send completes, imageShareService calls back to its delegate
+- (void)imageShareServiceDidSend:(ImageShareService*)imageShareService
+{
+    [self.progressIndicator stopAnimation:self];    
+}
+
 @end
-
-
-
-
-
