@@ -228,7 +228,7 @@ static ApplicationController*		sharedApplicationController = nil;
 #pragma mark Actions
 
 - (IBAction) sendImage:(id)sender
-{
+{    
 	// Use the imageBrowser selection to get a model object and send an image
     
     NSIndexSet* selectedImages = [self.imageBrowser selectionIndexes];

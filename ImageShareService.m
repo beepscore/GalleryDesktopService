@@ -324,17 +324,18 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
 #pragma mark Sending
 - (void)sendWithDictionary:(NSMutableDictionary*)sendArgumentsDictionary
 {
+    // Add autorelease pool.
+    // Without autorelease pool, if iPhone client quits during send, console logs
+    // "_NSCallStackArray autoreleased with no pool in place - just leaking"
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
     // sendWithDictionary: has one parameter, a dictionary.
     // This way, sendWithDictionary: can be called from performSelectorInBackground:withObject:    
     // The dictionary object contains multiple objects as "arguments" for use by the method
     NSFileHandle* connection = [sendArgumentsDictionary objectForKey:kConnectionKey];
     NSData* imageSize = [sendArgumentsDictionary objectForKey:kImageSizeKey];
     NSData* representationToSend = [sendArgumentsDictionary objectForKey:kRepresentationToSendKey];    
-    
-    // TODO: Add autorelease pool.
-    // If iPhone client quits during send, console logs
-    // _NSCallStackArray autoreleased with no pool in place - just leaking
-    
+        
     // suggestion from Sean Quinlan
     // if we lose a connection and have a "bad socket", these catch blocks around writeData
     // allows the server to write to other valid connections.
@@ -361,11 +362,15 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
     [self.delegate performSelectorOnMainThread:@selector(imageShareServiceDidSend:)
                                     withObject:self
                                  waitUntilDone:NO];
+
+    // http://developer.apple.com/mac/library/documentation/Cocoa/Reference/Foundation/Classes/NSAutoreleasePool_Class/Reference/Reference.html#//apple_ref/occ/instm/NSAutoreleasePool/drain
+    [pool drain];
 }
 
 
 - (void) sendImageToClients:(NSImage*)image
 {
+
     NSUInteger clientCount = [connectedFileHandles_ count];
     
     if( clientCount <= 0 )
@@ -428,7 +433,7 @@ NSString* const kRepresentationToSendKey = @"representationToSend";
                                withObject:sendArgumentsDictionary];
         [sendArgumentsDictionary release];
     }
-    [appController_ appendStringToLog:[NSString stringWithFormat:@"Sent image to %d clients", clientCount]];	
+    [appController_ appendStringToLog:[NSString stringWithFormat:@"Sent image to %d clients", clientCount]];
 }
 
 @end
